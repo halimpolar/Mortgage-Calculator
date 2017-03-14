@@ -51,13 +51,23 @@ public class CalculationFragment extends Fragment {
         return fragment;
     }
 
+    //Polar is working on this
+    //private Spinner spinner1;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    //    setContentView(R.layout.main);
+
+    //    addListenerOnButton();
+    //    addListenerOnSpinnerItemSelection();
+
+        //if (getArguments() != null) {
+        //    mParam1 = getArguments().getString(ARG_PARAM1);
+        //    mParam2 = getArguments().getString(ARG_PARAM2);
+        //}
+
+
     }
 
     @Override
