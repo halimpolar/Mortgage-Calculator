@@ -75,7 +75,7 @@ public class CalculationFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_calculation, container, false);
 
-        Button button1 = (Button) getView().findViewById(R.id.button_skip);
+        Button button1 = (Button) v.findViewById(R.id.button_skip);
         button1.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -96,11 +96,11 @@ public class CalculationFragment extends Fragment {
         adapter2.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         s2.setAdapter(adapter2);
 
-        EditText address = (EditText) getView().findViewById(R.id.editAddress);
-        EditText city = (EditText) getView().findViewById(R.id.editCity);
-        EditText zipcode = (EditText) getView().findViewById(R.id.editZipCode);
+        EditText address = (EditText) v.findViewById(R.id.editAddress);
+        EditText city = (EditText) v.findViewById(R.id.editCity);
+        EditText zipcode = (EditText) v.findViewById(R.id.editZipCode);
 
-        Button button2 = (Button) getView().findViewById(R.id.button_next);
+        Button button2 = (Button) v.findViewById(R.id.button_next);
         button2.setOnClickListener(new OnClickListener() {
 
             @Override
