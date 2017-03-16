@@ -6,13 +6,66 @@
     tools:context="edu.sjsu.cmpe277.cmpe277lab2.CalculationFragment">
 
     <!-- TODO: Update blank fragment layout -->
-
-    <Spinner
-        android:id="@+id/property_spinner"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/property_arrays"
+        android:text="Please choose your property type"/>
+
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:prompt="@string/property_prompt"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Address:"/>
 
+    <EditText
+        android:id="@+id/editAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="City:"/>
+
+    <EditText
+        android:id="@+id/editCity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="State:"/>
+
+    <Spinner
+        android:id="@+id/spinner2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Zipcode:"/>
+
+    <EditText
+        android:id="@+id/editZipCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/button_next"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save and Next"/>
+
+    <Button
+        android:id="@+id/button_skip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Skip to Loan Information"/>
 </LinearLayout>
