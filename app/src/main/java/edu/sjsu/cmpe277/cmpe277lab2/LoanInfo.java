@@ -8,7 +8,17 @@ package edu.sjsu.cmpe277.cmpe277lab2;
 public class LoanInfo {
     private double propertyPrice;
     private double downPayment;
+    private double loanAmount;
     private double apr;
+    private int terms;
+
+    public LoanInfo(double propertyPrice, double downPayment, double apr, int terms) {
+        this.propertyPrice = propertyPrice;
+        this.downPayment = downPayment;
+        this.loanAmount = propertyPrice - downPayment;
+        this.apr = apr;
+        this.terms = terms;
+    }
 
     public int getTerms() {
         return terms;
@@ -42,5 +52,7 @@ public class LoanInfo {
         this.apr = apr;
     }
 
-    private int terms;
+    public double getLoanAmount() {
+        return loanAmount;
+    }
 }

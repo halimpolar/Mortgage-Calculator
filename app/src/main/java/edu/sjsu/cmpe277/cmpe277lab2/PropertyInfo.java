@@ -19,6 +19,10 @@ public class PropertyInfo extends Activity {
     private int zipcode;
     private String state;
 
+    public String getLocation() {
+        return address + ", " + city + ", " + state + " " + zipcode;
+    }
+
     public String getType() {
         return type;
     }
