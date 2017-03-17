@@ -75,39 +75,62 @@ public class CalculationFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_calculation, container, false);
 
-        Button button1 = (Button) v.findViewById(R.id.button_skip);
-        button1.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                //call fragment Loan Info
-            }
-        });
-
         String [] property_choice = {"House","Condominium","Townhouse"};
         Spinner s1 = (Spinner) v.findViewById(R.id.spinner1);
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, property_choice);
         adapter1.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         s1.setAdapter(adapter1);
 
-        String [] state_choice = {"Alabama", "California", "Alaska"};
+        String [] state_choice = {"AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"};
         Spinner s2 = (Spinner) v.findViewById(R.id.spinner2);
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, state_choice);
         adapter2.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         s2.setAdapter(adapter2);
 
+        String [] terms_choice = {"15","30"};
+        Spinner s3 = (Spinner) getView().findViewById(R.id.spinner3);
+        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, terms_choice);
+        adapter3.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        s3.setAdapter(adapter3);
+
         EditText address = (EditText) v.findViewById(R.id.editAddress);
         EditText city = (EditText) v.findViewById(R.id.editCity);
         EditText zipcode = (EditText) v.findViewById(R.id.editZipCode);
+        EditText amount = (EditText) getView().findViewById(R.id.editAmount);
+        EditText downpayment = (EditText) getView().findViewById(R.id.editDownpayment);
+        EditText apr = (EditText) getView().findViewById(R.id.editAPR);
 
+        //reset button
+        Button button1 = (Button) v.findViewById(R.id.button_reset);
+        button1.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //clear all the field
+            }
+        });
+
+        //calculate button
         Button button2 = (Button) v.findViewById(R.id.button_next);
         button2.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View view) {
+
                 // save all the data and call fragment LoanInfo
             }
         });
+
+        //save and calculate
+        Button button3 = (Button) v.findViewById(R.id.button_save);
+        button2.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                // save all the data and call fragment LoanInfo
+            }
+        });
+
         return v;
     }
 
