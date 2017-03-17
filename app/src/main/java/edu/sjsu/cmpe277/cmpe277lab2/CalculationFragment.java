@@ -1,10 +1,14 @@
 package edu.sjsu.cmpe277.cmpe277lab2;
 
 import java.lang.*;
+
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +35,22 @@ public class CalculationFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private static final String MY_TAG = "CALCULATION FRAGMENT";
+    private MortgageDbHelper mDbHelper;
+    private SQLiteDatabase db;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private Spinner property_spinner;
+    private Spinner state_spinner;
+    private Spinner terms_spinner;
+    private EditText address;
+    private EditText city;
+    private EditText zipcode;
+    private EditText loan_amount;
+    private EditText down_payment;
+    private EditText annual_percentage;
 
     private OnFragmentInteractionListener mListener;
 
@@ -71,34 +87,39 @@ public class CalculationFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        mDbHelper = new MortgageDbHelper(getContext());
+        // Gets the data repository in write mode
+        db = mDbHelper.getWritableDatabase();
+        mDbHelper.onUpgrade(db, 1, 2);
         // Inflate the layout for this fragment
 
         View v = inflater.inflate(R.layout.fragment_calculation, container, false);
 
         String [] property_choice = {"House","Condominium","Townhouse"};
-        Spinner s1 = (Spinner) v.findViewById(R.id.spinner1);
+        property_spinner = (Spinner) v.findViewById(R.id.spinner1);
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, property_choice);
         adapter1.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        s1.setAdapter(adapter1);
+        property_spinner.setAdapter(adapter1);
 
         String [] state_choice = {"AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"};
-        Spinner s2 = (Spinner) v.findViewById(R.id.spinner2);
+        state_spinner = (Spinner) v.findViewById(R.id.spinner2);
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, state_choice);
         adapter2.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        s2.setAdapter(adapter2);
+        state_spinner.setAdapter(adapter2);
 
         String [] terms_choice = {"15","30"};
-        Spinner s3 = (Spinner) v.findViewById(R.id.spinner3);
+        terms_spinner = (Spinner) v.findViewById(R.id.spinner3);
         ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, terms_choice);
         adapter3.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        s3.setAdapter(adapter3);
+        terms_spinner.setAdapter(adapter3);
 
-        EditText address = (EditText) v.findViewById(R.id.editAddress);
-        EditText city = (EditText) v.findViewById(R.id.editCity);
-        EditText zipcode = (EditText) v.findViewById(R.id.editZipCode);
-        EditText amount = (EditText) v.findViewById(R.id.editAmount);
-        EditText downpayment = (EditText) v.findViewById(R.id.editDownpayment);
-        EditText apr = (EditText) v.findViewById(R.id.editAPR);
+        address = (EditText) v.findViewById(R.id.editAddress);
+        city = (EditText) v.findViewById(R.id.editCity);
+        zipcode = (EditText) v.findViewById(R.id.editZipCode);
+        loan_amount = (EditText) v.findViewById(R.id.editAmount);
+        down_payment = (EditText) v.findViewById(R.id.editDownpayment);
+        annual_percentage = (EditText) v.findViewById(R.id.editAPR);
 
         //reset button
         Button button1 = (Button) v.findViewById(R.id.button_reset);
@@ -122,16 +143,56 @@ public class CalculationFragment extends Fragment {
 
         //save and calculate
         Button button3 = (Button) v.findViewById(R.id.button_save);
-        button2.setOnClickListener(new OnClickListener() {
+        button3.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View view) {
-
-                // save all the data and call fragment LoanInfo
+                // save all the data into DB
+                saveDataToDB();
             }
         });
 
         return v;
+    }
+
+    private void saveDataToDB() {
+        Log.i(MY_TAG, property_spinner.getSelectedItem().toString());
+        Log.i(MY_TAG, state_spinner.getSelectedItem().toString());
+        Log.i(MY_TAG, terms_spinner.getSelectedItem().toString());
+        Log.i(MY_TAG, address.getText().toString());
+        Log.i(MY_TAG, city.getText().toString());
+        Log.i(MY_TAG, zipcode.getText().toString());
+        Log.i(MY_TAG, loan_amount.getText().toString());
+        Log.i(MY_TAG, down_payment.getText().toString());
+        Log.i(MY_TAG, annual_percentage.getText().toString());
+
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(MortgageDbHelper.MortgageEntry.COLUMN_NAME_PROPERTY, property_spinner.getSelectedItem().toString());
+        values.put(MortgageDbHelper.MortgageEntry.COLUMN_NAME_STATE, state_spinner.getSelectedItem().toString());
+        values.put(MortgageDbHelper.MortgageEntry.COLUMN_NAME_TERMS, terms_spinner.getSelectedItem().toString());
+        values.put(MortgageDbHelper.MortgageEntry.COLUMN_NAME_ADDRESS, address.getText().toString());
+        values.put(MortgageDbHelper.MortgageEntry.COLUMN_NAME_CITY, city.getText().toString());
+        values.put(MortgageDbHelper.MortgageEntry.COLUMN_NAME_ZIPCODE, zipcode.getText().toString());
+        values.put(MortgageDbHelper.MortgageEntry.COLUMN_NAME_LOAN_AMOUNT, loan_amount.getText().toString());
+        values.put(MortgageDbHelper.MortgageEntry.COLUMN_NAME_DOWN_PAYMENT, down_payment.getText().toString());
+        values.put(MortgageDbHelper.MortgageEntry.COLUMN_NAME_ANNUAL_PERCENTAGE_RATE, annual_percentage.getText().toString());
+
+        int mortgageCalculation = calculateTheMortgage();
+        Log.i(MY_TAG, "calculation result: " + mortgageCalculation);
+        values.put(MortgageDbHelper.MortgageEntry.COLUMN_NAME_CALCULATION, mortgageCalculation + "");
+
+        // Insert the new row, returning the primary key value of the new row
+        long newRowId = db.insert(MortgageDbHelper.MortgageEntry.TABLE_NAME, null, values);
+        Log.i(MY_TAG, "new row inserted to db: " + newRowId);
+    }
+
+    private int calculateTheMortgage() {
+        //TODO: caculate the mortgage
+        int x = Integer.parseInt(loan_amount.getText().toString());
+        int y = Integer.parseInt(down_payment.getText().toString());
+
+        return x - y;
     }
 
 

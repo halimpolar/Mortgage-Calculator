@@ -5,6 +5,7 @@
     android:layout_marginLeft="25dp"
     android:layout_marginRight="25dp"
     android:layout_marginTop="18dp"
+    android:layout_marginBottom="18dp"
     android:orientation="vertical"
     tools:context="edu.sjsu.cmpe277.cmpe277lab2.CalculationFragment">
 
@@ -101,6 +102,12 @@
         android:layout_height="wrap_content"/>
 
     <Button
+        android:id="@+id/button_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save and Calculate" />
+
+    <Button
         android:id="@+id/button_reset"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -112,9 +119,5 @@
         android:layout_height="wrap_content"
         android:text="Calculate Loan" />
 
-    <Button
-        android:id="@+id/button_save"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save and Calculate" />
+
 </LinearLayout>
