@@ -136,8 +136,7 @@ public class CalculationFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-
-                // save all the data and call fragment LoanInfo
+                calculateTheMortgage();
             }
         });
 
@@ -148,6 +147,7 @@ public class CalculationFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // save all the data into DB
+                calculateTheMortgage();
                 saveDataToDB();
             }
         });
@@ -178,7 +178,7 @@ public class CalculationFragment extends Fragment {
         values.put(MortgageDbHelper.MortgageEntry.COLUMN_NAME_DOWN_PAYMENT, down_payment.getText().toString());
         values.put(MortgageDbHelper.MortgageEntry.COLUMN_NAME_ANNUAL_PERCENTAGE_RATE, annual_percentage.getText().toString());
 
-        int mortgageCalculation = calculateTheMortgage();
+        double mortgageCalculation = calculateTheMortgage();
         Log.i(MY_TAG, "calculation result: " + mortgageCalculation);
         values.put(MortgageDbHelper.MortgageEntry.COLUMN_NAME_CALCULATION, mortgageCalculation + "");
 
@@ -187,12 +187,16 @@ public class CalculationFragment extends Fragment {
         Log.i(MY_TAG, "new row inserted to db: " + newRowId);
     }
 
-    private int calculateTheMortgage() {
+    private double calculateTheMortgage() {
         //TODO: caculate the mortgage
-        int x = Integer.parseInt(loan_amount.getText().toString());
-        int y = Integer.parseInt(down_payment.getText().toString());
+        double principal = Float.parseFloat(loan_amount.getText().toString());
+        double yearly_interest = Float.parseFloat(annual_percentage.getText().toString());
+        double monthly_interest = yearly_interest/1200;
+        double num_months = Float.parseFloat(terms_spinner.getSelectedItem().toString());
+        double constant = Math.pow((1 + monthly_interest),(num_months * 12));
+        double monthly_payment = ((principal * monthly_interest * constant) / (constant - 1));
+        return Math.ceil(monthly_payment);
 
-        return x - y;
     }
 
 
