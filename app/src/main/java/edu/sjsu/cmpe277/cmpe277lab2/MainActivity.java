@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private AlertDialog dialog;
     private HashMap<String, MortgagePayment> mortgagePayments;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +72,16 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        onNavigationItemSelected(navigationView.getMenu().findItem(R.id.nav_calculation));
+        Fragment fragment = new CalculationFragment();
+        setTitle(R.string.calculation_view);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .commit();
 
-        //initTestData();
+        initTestData();
     }
 
     private void initTestData() {
@@ -102,6 +108,7 @@ public class MainActivity extends AppCompatActivity
         mortgagePayments = new HashMap<String, MortgagePayment>();
         mortgagePayments.put(temp.getKey(), temp);
         mortgagePayments.put(temp2.getKey(), temp2);
+        updateMortgagePayments();
     }
 
     @Override
@@ -170,6 +177,12 @@ public class MainActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int id) {
                         mortgagePayments.remove(tag);
                         updateMortgagePayments();
+                        Fragment fragment = new SupportMapFragment();
+                        ((SupportMapFragment)fragment).getMapAsync(MainActivity.this);
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.content_frame, fragment)
+                                .commit();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
