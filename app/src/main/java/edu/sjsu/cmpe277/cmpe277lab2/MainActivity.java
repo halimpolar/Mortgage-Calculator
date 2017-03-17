@@ -16,10 +16,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         CalculationFragment.OnFragmentInteractionListener,
-        MapFragment.OnFragmentInteractionListener {
+        MapFragment.OnFragmentInteractionListener, OnMapReadyCallback {
 
     private DrawerLayout drawer;
 
@@ -56,8 +63,9 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         Fragment fragment;
         if (item.getItemId() == R.id.nav_map) {
-            fragment = new MapFragment();
+            fragment = new SupportMapFragment();
             setTitle(R.string.map_view);
+            ((SupportMapFragment)fragment).getMapAsync(this);
         } else {
             fragment = new CalculationFragment();
             setTitle(R.string.calculation_view);
@@ -74,5 +82,27 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        PropertyInfo test = new PropertyInfo();
+
+        LatLng sydney = new LatLng(-33.852, 151.211);
+        googleMap.addMarker(new MarkerOptions().position(sydney)
+                .title("Marker in Sydney"));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+
+    private LatLng getLatLngFromAddress(PropertyInfo property) {
+        LatLng location = null;
+
+        try {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return location;
     }
 }

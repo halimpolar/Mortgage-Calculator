@@ -13,30 +13,49 @@ import android.widget.RadioGroup;
  */
 
 public class PropertyInfo extends Activity {
-/*    String address;
-    String city;
-    int zipcode;
+    private String type;
+    private String address;
+    private String city;
+    private int zipcode;
+    private String state;
 
-    private RadioGroup radioPropertyGroup;
-    private RadioButton radioPropertyButton;
-    private Button btnNext;
-
-
-    public void addListenerOnButton() {
-        radioPropertyGroup = (RadioGroup) findViewById(R.id.radioProperty);
-        btnNext = (Button) findViewById(R.id.btnNext);
-
-        btnNext.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                int selectedRadio = radioPropertyGroup.getCheckedRadioButtonId();
-                radioPropertyButton = (RadioButton) findViewById(selectedRadio);
-
-            }
-
-        });
-
+    public String getType() {
+        return type;
     }
-*/
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public int getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(int zipcode) {
+        this.zipcode = zipcode;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 }
