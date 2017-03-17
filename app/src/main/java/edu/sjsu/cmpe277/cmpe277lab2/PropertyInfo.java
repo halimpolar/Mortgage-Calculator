@@ -7,12 +7,14 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import java.io.Serializable;
+
 /**
  * Created by Polar on 3/13/17.
  * Class to let the user choose the property information
  */
 
-public class PropertyInfo extends Activity {
+public class PropertyInfo implements Serializable{
     private String type;
     private String address;
     private String city;

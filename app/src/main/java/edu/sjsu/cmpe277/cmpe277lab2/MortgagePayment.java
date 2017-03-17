@@ -1,12 +1,13 @@
 package edu.sjsu.cmpe277.cmpe277lab2;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by starn on 3/16/2017.
  */
 
-public class MortgagePayment {
+public class MortgagePayment implements Serializable{
     private PropertyInfo propertyInfo;
     private LoanInfo loanInfo;
     private String key;

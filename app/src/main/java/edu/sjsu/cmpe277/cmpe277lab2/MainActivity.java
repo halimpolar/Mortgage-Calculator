@@ -1,8 +1,10 @@
 package edu.sjsu.cmpe277.cmpe277lab2;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -31,7 +33,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
+import java.io.Reader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -64,7 +75,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         onNavigationItemSelected(navigationView.getMenu().findItem(R.id.nav_calculation));
 
-        initTestData();
+        //initTestData();
     }
 
     private void initTestData() {
@@ -131,6 +142,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        getAllPayments();
 
         Iterator it = mortgagePayments.entrySet().iterator();
 
@@ -151,17 +163,18 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void showDeleteConfirmation() {
+    private void showDeleteConfirmation(final String tag) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.delete_confirm_msg)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // FIRE ZE MISSILES!
+                        mortgagePayments.remove(tag);
+                        updateMortgagePayments();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
+
                     }
                 });
         AlertDialog temp = builder.create();
@@ -199,8 +212,7 @@ public class MainActivity extends AppCompatActivity
                 .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User cancelled the dialog
-                        showDeleteConfirmation();
-                        dialog.dismiss();
+                        showDeleteConfirmation((String)marker.getTag());
                     }
                 })
                 .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
@@ -224,5 +236,33 @@ public class MainActivity extends AppCompatActivity
         displayList[3] = "Monthly Payment: " + payment.getMonthlyPayment();
 
         return displayList;
+    }
+
+    public class Wrapper {
+        private HashMap<String, MortgagePayment> map;
+
+        public HashMap<String, MortgagePayment> getMap() {
+            return map;
+        }
+
+        public void setMap(HashMap<String, MortgagePayment> map) {
+            this.map = map;
+        }
+    }
+
+    public void updateMortgagePayments() {
+        Gson gson = new Gson();
+        String jsonStr = gson.toJson(mortgagePayments);
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.saved_payments), jsonStr);
+        editor.commit();
+    }
+
+    public void getAllPayments() {
+        Type type = new TypeToken<HashMap<String, MortgagePayment>>(){}.getType();
+        Gson gson = new Gson();
+        String jsonStr = getPreferences(Context.MODE_PRIVATE).getString(getString(R.string.saved_payments), "");
+        mortgagePayments = gson.fromJson(jsonStr, type);
     }
 }

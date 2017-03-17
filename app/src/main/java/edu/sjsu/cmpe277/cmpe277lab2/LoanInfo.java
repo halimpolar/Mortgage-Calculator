@@ -1,11 +1,13 @@
 package edu.sjsu.cmpe277.cmpe277lab2;
 
+import java.io.Serializable;
+
 /**
  * Created by Polar on 3/13/17.
  * Class for the loan information
  */
 
-public class LoanInfo {
+public class LoanInfo implements Serializable{
     private double propertyPrice;
     private double downPayment;
     private double loanAmount;

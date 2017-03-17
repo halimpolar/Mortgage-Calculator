@@ -88,7 +88,7 @@ public class CalculationFragment extends Fragment {
         s2.setAdapter(adapter2);
 
         String [] terms_choice = {"15","30"};
-        Spinner s3 = (Spinner) getView().findViewById(R.id.spinner3);
+        Spinner s3 = (Spinner) v.findViewById(R.id.spinner3);
         ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, terms_choice);
         adapter3.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         s3.setAdapter(adapter3);
@@ -96,9 +96,9 @@ public class CalculationFragment extends Fragment {
         EditText address = (EditText) v.findViewById(R.id.editAddress);
         EditText city = (EditText) v.findViewById(R.id.editCity);
         EditText zipcode = (EditText) v.findViewById(R.id.editZipCode);
-        EditText amount = (EditText) getView().findViewById(R.id.editAmount);
-        EditText downpayment = (EditText) getView().findViewById(R.id.editDownpayment);
-        EditText apr = (EditText) getView().findViewById(R.id.editAPR);
+        EditText amount = (EditText) v.findViewById(R.id.editAmount);
+        EditText downpayment = (EditText) v.findViewById(R.id.editDownpayment);
+        EditText apr = (EditText) v.findViewById(R.id.editAPR);
 
         //reset button
         Button button1 = (Button) v.findViewById(R.id.button_reset);
