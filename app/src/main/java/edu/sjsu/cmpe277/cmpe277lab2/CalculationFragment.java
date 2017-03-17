@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.app.Activity;
 import android.widget.Button;
-
+import android.widget.Toast;
 
 
 /**
@@ -127,6 +128,12 @@ public class CalculationFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //clear all the field
+                address.setText("");
+                city.setText("");
+                zipcode.setText("");
+                loan_amount.setText("");
+                down_payment.setText("");
+                annual_percentage.setText("");
             }
         });
 
@@ -146,9 +153,42 @@ public class CalculationFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-                // save all the data into DB
-                calculateTheMortgage();
-                saveDataToDB();
+                if (address.getText().toString().length() <= 0) {
+                    // toast
+                    Toast.makeText(getContext(), "Please enter a valid address", Toast.LENGTH_SHORT).show();
+                }
+
+                else if (city.getText().toString().length() <= 0) {
+                    // toast
+                    Toast.makeText(getContext(), "Please enter a valid city", Toast.LENGTH_SHORT).show();
+                }
+
+                else if (zipcode.getText().toString().length() <= 0) {
+                    // toast
+                    Toast.makeText(getContext(), "Please enter the zipcode", Toast.LENGTH_SHORT).show();
+                }
+
+                else if (loan_amount.getText().toString().length() <= 0) {
+                    // toast
+                    Toast.makeText(getContext(), "Please enter the loan amount", Toast.LENGTH_SHORT).show();
+                }
+
+                else if (down_payment.getText().toString().length() <= 0) {
+                    // toast
+                    Toast.makeText(getContext(), "Please enter the down payment", Toast.LENGTH_SHORT).show();
+                }
+
+                else if (annual_percentage.getText().toString().length() <= 0) {
+                    // toast
+                    Toast.makeText(getContext(), "Please enter the annual percentage", Toast.LENGTH_SHORT).show();
+                }
+
+                else {
+                    // save all the data into DB
+                    calculateTheMortgage();
+                    saveDataToDB();
+                }
+
             }
         });
 
@@ -199,6 +239,10 @@ public class CalculationFragment extends Fragment {
 
     }
 
+    private void clearField() {
+        //address = ((EditText) v.findViewById(R.id.editAddress)).setText("");
+
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
