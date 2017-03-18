@@ -43,6 +43,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.lang.reflect.Type;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -57,7 +58,9 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private AlertDialog dialog;
     private HashMap<String, MortgagePayment> mortgagePayments;
-    NavigationView navigationView;
+    private NavigationView navigationView;
+
+    private DecimalFormat format = new DecimalFormat("#.00");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,35 +83,7 @@ public class MainActivity extends AppCompatActivity
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, fragment)
                 .commit();
-
-        initTestData();
-    }
-
-    private void initTestData() {
-        PropertyInfo test = new PropertyInfo();
-        test.setType("House");
-        test.setAddress("1 Washington Sq");
-        test.setCity("San Jose");
-        test.setState("CA");
-        test.setZipcode(95192);
-        MortgagePayment temp = new MortgagePayment();
-        temp.setPropertyInfo(test);
-        temp.setLoanInfo(new LoanInfo(2000000, 3330.33, 0.2, 15));
-
-        PropertyInfo test2 = new PropertyInfo();
-        test2.setType("Apartment");
-        test2.setAddress("383 Lafayette Street");
-        test2.setCity("New York");
-        test2.setState("NY");
-        test2.setZipcode(10003);
-        MortgagePayment temp2 = new MortgagePayment();
-        temp2.setPropertyInfo(test2);
-        temp2.setLoanInfo(new LoanInfo(5000000, 4000, 0.52, 30));
-
-        mortgagePayments = new HashMap<String, MortgagePayment>();
-        mortgagePayments.put(temp.getKey(), temp);
-        mortgagePayments.put(temp2.getKey(), temp2);
-        updateMortgagePayments();
+        getAllPayments();
     }
 
     @Override
@@ -160,14 +135,22 @@ public class MainActivity extends AppCompatActivity
 
             Marker tempMarker = googleMap.addMarker(new MarkerOptions().position(marker));
             tempMarker.setTag(pair.getKey());
-            //googleMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
-
             googleMap.setOnMarkerClickListener(this);
         }
     }
 
     private void switchToEditView(String tag) {
+        Fragment fragment = CalculationFragment.newInstance(tag);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .commit();
+    }
 
+    public void updateEdited(MortgagePayment updatedPayment) {
+        mortgagePayments.remove(updatedPayment.getKey());
+        mortgagePayments.put(updatedPayment.getKey(), updatedPayment);
+        updateMortgagePayments();
     }
 
     private void showDeleteConfirmation(final String tag) {
@@ -244,9 +227,9 @@ public class MainActivity extends AppCompatActivity
         MortgagePayment payment = mortgagePayments.get(tag);
         CharSequence[] displayList = new CharSequence[4];
         displayList[0] = "Property Type: " + payment.getPropertyInfo().getType();
-        displayList[1] = "Loan Amount: " + payment.getLoanInfo().getLoanAmount();
-        displayList[2] = "APR: " + payment.getLoanInfo().getApr();
-        displayList[3] = "Monthly Payment: " + payment.getMonthlyPayment();
+        displayList[1] = "Loan Amount: $" + format.format(payment.getLoanInfo().getLoanAmount());
+        displayList[2] = "APR: " + payment.getLoanInfo().getApr() + "%";
+        displayList[3] = "Monthly Payment: $" + format.format(payment.getMonthlyPayment());
 
         return displayList;
     }
@@ -272,10 +255,26 @@ public class MainActivity extends AppCompatActivity
         editor.commit();
     }
 
+    public void savePayment(MortgagePayment newPayment) {
+        mortgagePayments.put(newPayment.getKey(), newPayment);
+        updateMortgagePayments();
+    }
+
     public void getAllPayments() {
         Type type = new TypeToken<HashMap<String, MortgagePayment>>(){}.getType();
         Gson gson = new Gson();
         String jsonStr = getPreferences(Context.MODE_PRIVATE).getString(getString(R.string.saved_payments), "");
-        mortgagePayments = gson.fromJson(jsonStr, type);
+        if (jsonStr == "") {
+            mortgagePayments = new HashMap<String, MortgagePayment>();
+        } else {
+            mortgagePayments = gson.fromJson(jsonStr, type);
+        }
+    }
+
+    public MortgagePayment getMortgagePayment(String tag) {
+        if (mortgagePayments.containsKey(tag)) {
+            return mortgagePayments.get(tag);
+        }
+        return null;
     }
 }

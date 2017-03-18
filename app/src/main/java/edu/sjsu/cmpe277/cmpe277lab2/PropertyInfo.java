@@ -18,7 +18,7 @@ public class PropertyInfo implements Serializable{
     private String type;
     private String address;
     private String city;
-    private int zipcode;
+    private String zipcode;
     private String state;
 
     public String getLocation() {
@@ -49,11 +49,11 @@ public class PropertyInfo implements Serializable{
         this.city = city;
     }
 
-    public int getZipcode() {
+    public String getZipcode() {
         return zipcode;
     }
 
-    public void setZipcode(int zipcode) {
+    public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
     }
 
