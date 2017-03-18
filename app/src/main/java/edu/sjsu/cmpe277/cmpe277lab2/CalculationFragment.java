@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +17,8 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.app.Activity;
 import android.widget.Button;
 import android.widget.Toast;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,8 +34,9 @@ public class CalculationFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String MY_TAG = "CALCULATION FRAGMENT";
-    private MortgageDbHelper mDbHelper;
-    private SQLiteDatabase db;
+    //private MortgageDbHelper mDbHelper;
+    //private SQLiteDatabase db;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -52,6 +50,7 @@ public class CalculationFragment extends Fragment {
     private EditText loan_amount;
     private EditText down_payment;
     private EditText annual_percentage;
+    private TextView result;
 
     private OnFragmentInteractionListener mListener;
 
@@ -89,12 +88,14 @@ public class CalculationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        /*
+        //DB
         mDbHelper = new MortgageDbHelper(getContext());
         // Gets the data repository in write mode
         db = mDbHelper.getWritableDatabase();
         mDbHelper.onUpgrade(db, 1, 2);
         // Inflate the layout for this fragment
-
+        */
         View v = inflater.inflate(R.layout.fragment_calculation, container, false);
 
         String [] property_choice = {"House","Condominium","Townhouse"};
@@ -103,7 +104,7 @@ public class CalculationFragment extends Fragment {
         adapter1.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         property_spinner.setAdapter(adapter1);
 
-        String [] state_choice = {"AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"};
+        final String [] state_choice = {"AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"};
         state_spinner = (Spinner) v.findViewById(R.id.spinner2);
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, state_choice);
         adapter2.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
@@ -115,6 +116,7 @@ public class CalculationFragment extends Fragment {
         adapter3.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         terms_spinner.setAdapter(adapter3);
 
+        result = (TextView) v.findViewById(R.id.display_result);
         address = (EditText) v.findViewById(R.id.editAddress);
         city = (EditText) v.findViewById(R.id.editCity);
         zipcode = (EditText) v.findViewById(R.id.editZipCode);
@@ -128,6 +130,9 @@ public class CalculationFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //clear all the field
+                state_spinner.setSelection(4);
+                terms_spinner.setSelection(0);
+                property_spinner.setSelection(0);
                 address.setText("");
                 city.setText("");
                 zipcode.setText("");
@@ -143,7 +148,25 @@ public class CalculationFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-                calculateTheMortgage();
+                if (loan_amount.getText().toString().length() <= 0) {
+                    // toast
+                    Toast.makeText(getContext(), "Please enter the loan amount", Toast.LENGTH_LONG).show();
+                }
+
+                else if (down_payment.getText().toString().length() <= 0) {
+                    // toast
+                    Toast.makeText(getContext(), "Please enter the down payment", Toast.LENGTH_LONG).show();
+                }
+
+                else if (annual_percentage.getText().toString().length() <= 0) {
+                    // toast
+                    Toast.makeText(getContext(), "Please enter the annual percentage", Toast.LENGTH_LONG).show();
+                }
+
+                else {
+                    result.setText("Your Monthly Mortgage Payment Is: $" + calculateTheMortgage());
+
+                }
             }
         });
 
@@ -155,38 +178,39 @@ public class CalculationFragment extends Fragment {
             public void onClick(View view) {
                 if (address.getText().toString().length() <= 0) {
                     // toast
-                    Toast.makeText(getContext(), "Please enter a valid address", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Please enter a valid address", Toast.LENGTH_LONG).show();
                 }
 
                 else if (city.getText().toString().length() <= 0) {
                     // toast
-                    Toast.makeText(getContext(), "Please enter a valid city", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Please enter a valid city", Toast.LENGTH_LONG).show();
                 }
 
                 else if (zipcode.getText().toString().length() <= 0) {
                     // toast
-                    Toast.makeText(getContext(), "Please enter the zipcode", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Please enter the zipcode", Toast.LENGTH_LONG).show();
                 }
 
                 else if (loan_amount.getText().toString().length() <= 0) {
                     // toast
-                    Toast.makeText(getContext(), "Please enter the loan amount", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Please enter the loan amount", Toast.LENGTH_LONG).show();
                 }
 
                 else if (down_payment.getText().toString().length() <= 0) {
                     // toast
-                    Toast.makeText(getContext(), "Please enter the down payment", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Please enter the down payment", Toast.LENGTH_LONG).show();
                 }
 
                 else if (annual_percentage.getText().toString().length() <= 0) {
                     // toast
-                    Toast.makeText(getContext(), "Please enter the annual percentage", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Please enter the annual percentage", Toast.LENGTH_LONG).show();
                 }
 
                 else {
                     // save all the data into DB
-                    calculateTheMortgage();
-                    saveDataToDB();
+                    result.setText("Your Monthly Mortgage Payment Is: $" + calculateTheMortgage());
+                    //saveDataToDB();
+                    // TODO: place the DB here where the info can be saved
                 }
 
             }
@@ -195,6 +219,7 @@ public class CalculationFragment extends Fragment {
         return v;
     }
 
+    /*
     private void saveDataToDB() {
         Log.i(MY_TAG, property_spinner.getSelectedItem().toString());
         Log.i(MY_TAG, state_spinner.getSelectedItem().toString());
@@ -226,6 +251,7 @@ public class CalculationFragment extends Fragment {
         long newRowId = db.insert(MortgageDbHelper.MortgageEntry.TABLE_NAME, null, values);
         Log.i(MY_TAG, "new row inserted to db: " + newRowId);
     }
+    */
 
     private double calculateTheMortgage() {
         //TODO: caculate the mortgage
@@ -235,14 +261,9 @@ public class CalculationFragment extends Fragment {
         double num_months = Float.parseFloat(terms_spinner.getSelectedItem().toString());
         double constant = Math.pow((1 + monthly_interest),(num_months * 12));
         double monthly_payment = ((principal * monthly_interest * constant) / (constant - 1));
-        return Math.ceil(monthly_payment);
-
+        return Math.round(monthly_payment);
     }
 
-    private void clearField() {
-        //address = ((EditText) v.findViewById(R.id.editAddress)).setText("");
-
-    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
