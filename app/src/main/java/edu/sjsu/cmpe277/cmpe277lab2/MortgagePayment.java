@@ -18,6 +18,10 @@ public class MortgagePayment implements Serializable{
         key = UUID.randomUUID().toString();
     }
 
+    public void setKey(String key) {
+        this.key = key;
+    }
+
     public String getKey() {
         return key;
     }

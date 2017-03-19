@@ -48,6 +48,7 @@ public class CalculationFragment extends Fragment {
     private EditText down_payment;
     private EditText annual_percentage;
     private TextView result;
+    private String savedTag;
 
     private boolean isEditMode = false;
 
@@ -221,11 +222,12 @@ public class CalculationFragment extends Fragment {
         address.setText(payment.getPropertyInfo().getAddress());
         city.setText(payment.getPropertyInfo().getCity());
         state_spinner.setSelection(getValueIndex(payment.getPropertyInfo().getState(), state_spinner));
-        zipcode.setTag(payment.getPropertyInfo().getZipcode());
+        zipcode.setText(payment.getPropertyInfo().getZipcode());
         property_price.setText(Double.toString(payment.getLoanInfo().getPropertyPrice()));
         down_payment.setText(Double.toString(payment.getLoanInfo().getDownPayment()));
         annual_percentage.setText(Double.toString(payment.getLoanInfo().getApr()));
         terms_spinner.setSelection(getValueIndex(Integer.toString(payment.getLoanInfo().getTerms()), terms_spinner));
+        savedTag = tag;
     }
 
     private int getValueIndex(String value, Spinner spinner) {
@@ -254,6 +256,7 @@ public class CalculationFragment extends Fragment {
 
         temp.setMonthlyPayment(calculateTheMortgage());
         if (isEditMode) {
+            temp.setKey(savedTag);
             ((MainActivity)getActivity()).updateEdited(temp);
             Toast.makeText(getContext(), "Payment updated successfully!", Toast.LENGTH_SHORT).show();
         } else {
